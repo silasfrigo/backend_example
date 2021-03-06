@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+
+  Sample SAM Template for sam-app
+
+Parameters:
+  Env:
+    Type: String
+  ProjectName:
+    Type: String
+    Default: Prescriptions
+  SSMPrefix:
+    Type: String
+
+Mappings:
+  EnvConfig:
+    Dev:
+      EnvName: development
+      CacheTableName: ddb-cache
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 768
+    Layers:
+      - !Ref RequirementsLayer
+    CodeUri: src/project
+    Environment:
+      Variables:
+        ENV_FOR_DYNACONF: !FindInMap [EnvConfig, !Ref Env, EnvName]
+
+Resources:
+  MainApiFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: prescriptions.lambda_handler.handler
+      Runtime: python3.8
+      Events:
+        Main:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: "/{proxy+}"
+            Method: ANY
+          RestApiId:
+              Ref: SimpleApi
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: "*"
+        - DynamoDBCrudPolicy:
+            TableName: !FindInMap [EnvConfig, !Ref Env, CacheTableName]
+        
+  SimpleApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Api
+      TracingEnabled: true
+  
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: 8.0.21
+      DBInstanceClass: db.t2.micro
+      MasterUsername: !Sub "{{resolve:ssm:${SSMPrefix}user:1}}"
+      MasterUserPassword: !Sub "{{resolve:ssm:${SSMPrefix}password:1}}"
+
+  RequirementsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub "${Env}${ProjectName}Requirements"
+      ContentUri: src/layers/requirements/
+      CompatibleRuntimes:
+        - python3.8
+    Metadata:
+      BuildMethod: python3.8
