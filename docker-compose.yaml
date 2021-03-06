@@ -1,0 +1,13 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+    image: iclinic-prescriptions
+    volumes:
+      - ./:/var/task
+    entrypoint:
+      - ""
+    ports:
+      - "9200"
+      - "9300"

@@ -1,0 +1,13 @@
+[MASTER]
+ignore=tests
+disable=
+    C0304,  # missing-final-newline -> it was enable on flake8
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-class-docstring
+    R0903,  # too-few-public-methods
+    E0611   # no-name-in-module
+max-line-length=240
+
+[FORMAT]
+good-names=q
