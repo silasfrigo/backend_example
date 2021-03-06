@@ -1,0 +1,5 @@
+aws-lambda-powertools==1.10.1
+fastapi==0.63.0
+dynaconf==3.1.2
+mangum==0.10.0
+requests==2.25.1
