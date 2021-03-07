@@ -23,7 +23,7 @@ Mappings:
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 30
     MemorySize: 768
     Layers:
       - !Ref RequirementsLayer
@@ -31,41 +31,46 @@ Globals:
     Environment:
       Variables:
         ENV_FOR_DYNACONF: !FindInMap [EnvConfig, !Ref Env, EnvName]
+        PRESCRIPTIONS_dbusername: !Sub "{{resolve:ssm:${SSMPrefix}user:1}}"
+        PRESCRIPTIONS_dbpassword: !Sub "{{resolve:ssm:${SSMPrefix}master_password:1}}"
+        PRESCRIPTIONS_dbhost: !Sub "{{resolve:ssm:${SSMPrefix}host:1}}"
+        PRESCRIPTIONS_dbname: prescriptions
+
 
 Resources:
-  MainApiFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      Handler: prescriptions.lambda_handler.handler
-      Runtime: python3.8
-      Events:
-        Main:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: "/{proxy+}"
-            Method: ANY
-          RestApiId:
-              Ref: SimpleApi
-      Policies:
-        - SSMParameterReadPolicy:
-            ParameterName: "*"
-        - DynamoDBCrudPolicy:
-            TableName: !FindInMap [EnvConfig, !Ref Env, CacheTableName]
-        
+
   SimpleApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Api
       TracingEnabled: true
-  
-  MyDB:
+
+  SimpleApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/project
+      Handler: prescriptions.main.handler
+      Runtime: python3.8
+      FunctionName: IclinicSimpleAPI
+      Events:
+        SimpleEndpointApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SimpleApi
+            Path: "/{proxy+}"
+            Method: ANY
+
+  PrescriptionsDB:
     Type: AWS::RDS::DBInstance
     Properties:
       Engine: mysql
       EngineVersion: 8.0.21
       DBInstanceClass: db.t2.micro
       MasterUsername: !Sub "{{resolve:ssm:${SSMPrefix}user:1}}"
-      MasterUserPassword: !Sub "{{resolve:ssm:${SSMPrefix}password:1}}"
+      MasterUserPassword: !Sub "{{resolve:ssm:${SSMPrefix}master_password:1}}"
+      DBInstanceIdentifier: iclinic-prescriptions
+      AllocatedStorage: '5'
+      DBName: prescriptions
 
   RequirementsLayer:
     Type: AWS::Serverless::LayerVersion
