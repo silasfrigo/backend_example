@@ -37,6 +37,11 @@
             "text": "Prescricao medica"
         }'
 
+    - Como montei a estrutura:
+      - A montagem da infra estrutura do projeto é toda feita a partir do template SAM(template.yaml).
+
+      - Ao rodar o comando `sam build --use-container` o stack é montado
+      - Após ter o stack, executando o comando `sam deploy --config-env=dev --profile=SEU_PROFILE_AWS` toda a infra estrutura será "deployada", criando ou atualizando os serviços conforme necessidade. 
 ## Cache:
  - Por se tratar de uma aplicação serverless foi necessário um cache de duas partes.
  - Primeiro tento extrair o cache da memória. Caso não consiga encontrar, tento extrair do DynamoDB. 
