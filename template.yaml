@@ -23,7 +23,7 @@ Mappings:
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 30
+    Timeout: 120  # high timeout due to possible retries when calling dependents api.
     MemorySize: 768
     Layers:
       - !Ref RequirementsLayer
@@ -35,9 +35,28 @@ Globals:
         PRESCRIPTIONS_dbpassword: !Sub "{{resolve:ssm:${SSMPrefix}master_password:1}}"
         PRESCRIPTIONS_dbhost: !Sub "{{resolve:ssm:${SSMPrefix}host:1}}"
         PRESCRIPTIONS_dbname: prescriptions
+        PRESCRIPTIONS_cache_table: !FindInMap [EnvConfig, !Ref Env, CacheTableName]
 
 
 Resources:
+  CacheTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !FindInMap [EnvConfig, !Ref Env, CacheTableName]
+      AttributeDefinitions:
+        -
+          AttributeName: key
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: key
+          KeyType: HASH      
+      TimeToLiveSpecification:
+        AttributeName: expires_on
+        Enabled: true
+      ProvisionedThroughput:
+        ReadCapacityUnits: 25
+        WriteCapacityUnits: 25
 
   SimpleApi:
     Type: AWS::Serverless::Api
@@ -59,6 +78,10 @@ Resources:
             RestApiId: !Ref SimpleApi
             Path: "/{proxy+}"
             Method: ANY
+
+      Policies:        
+        - DynamoDBCrudPolicy:
+            TableName: !FindInMap [EnvConfig, !Ref Env, CacheTableName]
 
   PrescriptionsDB:
     Type: AWS::RDS::DBInstance
