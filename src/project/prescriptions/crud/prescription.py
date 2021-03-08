@@ -1,11 +1,11 @@
 from aws_lambda_powertools import Logger
+from fastapi import HTTPException
 
 from prescriptions.crud.dependents import DependentsAPI
 from prescriptions.schemas.prescription import CreatePrescription, ReadPrescription
 from prescriptions.schemas.dependents import Clinic, Patient, Physician
 from prescriptions.models.prescription import Prescription
 
-from fastapi import HTTPException
 
 logger = Logger(child=True)
 

@@ -19,6 +19,20 @@ dependent_patient = {
 }
 
 
+dependent_metrics = {
+    "id": "1",
+    "clinic_id": 1,
+    "clinic_name": "Clinica A",
+    "physician_id": 1,
+    "physician_name": "Dr. João",
+    "physician_crm": "SP293893",
+    "patient_id": 1,
+    "patient_name": "Rodrigo",
+    "patient_email": "rodrigo@gmail.com",
+    "patient_phone": "(16)998765625"
+}
+
+
 metrics = {
     'physician_id': 5,
     'physician_name': 'Kassandra Feil',
@@ -48,3 +62,15 @@ class Fake:
 
     def commit(self):
         return True
+
+
+class FakeRequest:
+    json_return = {'foo': 'bar'}
+    status_code_return = 200
+
+    @property
+    def status_code(self):
+        return self.status_code_return
+
+    def json(self):
+        return self.json_return
