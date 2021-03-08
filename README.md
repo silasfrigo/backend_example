@@ -41,8 +41,13 @@
  - Por se tratar de uma aplicação serverless foi necessário um cache de duas partes.
  - Primeiro tento extrair o cache da memória. Caso não consiga encontrar, tento extrair do DynamoDB. 
  - Caso nenhum desses tenha sucesso, consultamos as APIs
+ - Exemplo de um caso do cache não estar na memória mas estar no DynamoDB. (Logs do CloudWatch)
+![cache_from_dynamo_to_file](https://user-images.githubusercontent.com/47428195/110357616-3b759a00-801a-11eb-9fc1-47bbad3fe125.png)
+
 
 ## Testes
  - A cobertura dos testes está em 99%
  - comando `make build` para montar o container
  - comando `make test` se quiser apenas rodar os testes e ver o coverage
+![coverage](https://user-images.githubusercontent.com/47428195/110357418-049f8400-801a-11eb-868b-b2278223c7b0.png)
+
