@@ -25,7 +25,7 @@ jobs:
         docker-compose up -d
         echo 'machine started'
         echo 'pausing: waiting for mysql to come available'
-        ./scripts/wait-until "docker-compose exec -T -e MYSQL_PWD=jyjyjrtJKJKUJK123123 db mysql -D prescriptions -e 'select 1'" 15
+        ./.github/scripts/wait-until.sh "docker-compose exec -T -e MYSQL_PWD=shtshDHDH42142 db mysql -D prescriptions -e 'select 1'" 15
         echo 'un-pausing: mysql is now available'
     - name: Run tests
       run: docker-compose run --rm app py.test --cov-report term
