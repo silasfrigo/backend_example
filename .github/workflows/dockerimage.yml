@@ -16,7 +16,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - run: sudo /etc/init.d/mysql start
+    - run: |
+       sudo /etc/init.d/mysql start
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker-compose build
