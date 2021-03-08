@@ -5,4 +5,4 @@ build:
 	docker-compose build
 
 test:
-	docker-compose run --volume ~/.aws/:/root/.aws/ --rm app pytest
+	docker-compose run --volume ~/.aws/:/root/.aws/ --rm app pytest --cov-report term

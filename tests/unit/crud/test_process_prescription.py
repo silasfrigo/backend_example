@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from prescriptions.crud.prescription import ProcessPrescription
 from prescriptions.schemas.prescription import CreatePrescription
 from prescriptions.crud.dependents import DependentsAPI
-from ...fixtures import dependent_physician, dependent_patient, dependent_clinic, Fake
+from tests.fixtures import dependent_physician, dependent_patient, dependent_clinic, Fake
 
 
 @pytest.fixture
