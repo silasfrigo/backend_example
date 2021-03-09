@@ -56,3 +56,6 @@
  - comando `make test` se quiser apenas rodar os testes e ver o coverage
 ![coverage](https://user-images.githubusercontent.com/47428195/110357418-049f8400-801a-11eb-868b-b2278223c7b0.png)
 
+## Possiveis melhorias:
+- Pelo que conferi a autenticação dos serviços dependentes não estão funcionando. Não é validado o jwt enviado no headers. 
+ - Uma melhoria possivel para esse sistemas seria fazer a chamada para os serviços complementares de maneira async.
