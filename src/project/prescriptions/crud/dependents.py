@@ -43,8 +43,9 @@ class DependentsAPI:
                 if response.status_code == 404:
                     error = {'message': 'physician not found', 'code': 2}
         except ConnectionError:
-            error = {'message': 'physicians service not available', 'code': 5}
+            pass
 
+        error = {'message': 'physicians service not available', 'code': 5}
         logger.info({'error': 'get_physician_failure', 'attr': error})
         raise HTTPException(status_code=400, detail=error or {})
 
@@ -87,8 +88,9 @@ class DependentsAPI:
                 if response.status_code == 404:
                     error = {'message': 'patient not found', 'code': 3}
         except ConnectionError:
-            error = {'message': 'patients service not available', 'code': 6}
+            pass
 
+        error = {'message': 'patients service not available', 'code': 6}
         logger.info({'error': 'get_patient_failure', 'attr': error})
         raise HTTPException(status_code=400, detail=error or {})
 
