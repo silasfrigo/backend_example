@@ -3,6 +3,9 @@
 ## Objetivo:
   - Criar um endpoint que recebe algumas informações, complementa essas informações com consultas em outras API, e envia este dado completo pra uma outra API.
 
+## Informações Importantes:
+ - Após alguns testes a API de Métricas não está mais funcionando corretamente. Retorna apenas -> Bad Request "Max number of elements reached for this resource!"
+
 
 ## Ferramentas Utilizadas:
  - Python 3+
