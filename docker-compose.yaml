@@ -6,10 +6,17 @@ services:
     image: iclinic-prescriptions
     volumes:
       - ./:/var/task
+    entrypoint:
+      - ""
+    ports:
+      - "9200"
+      - "9300"
     depends_on:
       - db
     links:
       - db
+    command:
+      sh -c './wait-for db:3307 -- echo "MySQL Running"'
   db:
     image: mysql:8.0.21
     command: --default-authentication-plugin=mysql_native_password
@@ -18,10 +25,10 @@ services:
     expose:
       - 3307
     environment:
-        MYSQL_ROOT_PASSWORD: shtshDHDH42142
+        MYSQL_ROOT_PASSWORD: jyjyjrtJKJKUJK123123
         MYSQL_DATABASE: prescriptions
         MYSQL_USER: iclinic
-        MYSQL_PASSWORD: shtshDHDH42142
+        MYSQL_PASSWORD: jyjyjrtJKJKUJK123123
         MYSQL_TCP_PORT: 3307
     volumes:
       - /var/lib/mysql
