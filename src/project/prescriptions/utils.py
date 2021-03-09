@@ -71,12 +71,18 @@ class CacheHandler:
         self.max_age = round((ttl_datetime - now).total_seconds())
 
     def get_cache(self):
+        save_file = True
+
         value = self._get_cache_from_file()
+        if value:
+            save_file = False
 
         if not value:
             value = self._get_cache_from_dynamo()
 
-        self._save_cache_file(value)
+        if save_file and value:
+            self._save_cache_file(value)
+
         return json.loads(value) if value else value
 
     def save_cache(self, value, cache_ttl):

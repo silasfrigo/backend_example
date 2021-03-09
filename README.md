@@ -37,11 +37,11 @@
             "text": "Prescricao medica"
         }'
 
-    - Como montei a estrutura:
-      - A montagem da infra estrutura do projeto é toda feita a partir do template SAM(template.yaml).
+## Infra:
+  - A montagem da infra estrutura do projeto é toda feita a partir do template SAM(template.yaml).
 
-      - Ao rodar o comando `sam build --use-container` o stack é montado
-      - Após ter o stack, executando o comando `sam deploy --config-env=dev --profile=SEU_PROFILE_AWS` toda a infra estrutura será "deployada", criando ou atualizando os serviços conforme necessidade. 
+  - Ao rodar o comando `sam build --use-container` o stack é montado
+  - Após ter o stack, executando o comando `sam deploy --config-env=dev --profile=SEU_PROFILE_AWS` toda a infra estrutura será "deployada", criando ou atualizando os serviços conforme necessidade. 
 ## Cache:
  - Por se tratar de uma aplicação serverless foi necessário um cache de duas partes.
  - Primeiro tento extrair o cache da memória. Caso não consiga encontrar, tento extrair do DynamoDB. 
@@ -56,3 +56,7 @@
  - comando `make test` se quiser apenas rodar os testes e ver o coverage
 ![coverage](https://user-images.githubusercontent.com/47428195/110357418-049f8400-801a-11eb-868b-b2278223c7b0.png)
 
+## Possiveis melhorias:
+ - Pelo que conferi a autenticação dos serviços dependentes não estão funcionando. Não é validado o jwt enviado no headers. 
+ - Uma melhoria possivel para esse sistemas seria fazer a chamada para os serviços complementares de maneira async.
+ - Fazer com que não salve o clinics id no banco, quando o mesmo não obteve retorno da api dependente.
