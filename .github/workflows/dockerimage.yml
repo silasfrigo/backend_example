@@ -1,0 +1,23 @@
+name: Iclinic Prescriptions API
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Manual or automatic execution'
+        default: 'Manual or automatic execution'
+        required: true
+  push:
+    branches: [develop, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker-compose build
+    - name: Run tests
+      run: docker-compose run --rm app sh -c './wait-for db:3307 -- echo "MySQL Running"; py.test --cov-report term'
